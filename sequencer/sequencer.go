@@ -7,6 +7,8 @@ import (
 	"github.com/mkb218/gosndfile/sndfile"
 )
 
+// Sequencer describes the mechanism that
+// Triggers and synchronizses a Pattern for audio playback.
 type Sequencer struct {
 	Timer   *Timer
 	Bar     int
@@ -15,6 +17,9 @@ type Sequencer struct {
 	Stream  *portaudio.Stream
 }
 
+// NewSequencer creates and returns a pointer to a New Sequencer.
+// Returns an error if there is one encountered
+// During initializing portaudio, or the default stream
 func NewSequencer() (*Sequencer, error) {
 	err := portaudio.Initialize()
 	if err != nil {
@@ -44,6 +49,9 @@ func NewSequencer() (*Sequencer, error) {
 	return s, nil
 }
 
+// Start starts the sequencer.
+// Starts counting the Pulses Per Quarter note for the given BPM.
+// Triggers samples based on each 16th note that is triggered.
 func (s *Sequencer) Start() {
 	go func() {
 		ppqnCount := 0
@@ -55,7 +63,8 @@ func (s *Sequencer) Start() {
 
 				// TODO add in time signatures
 				if ppqnCount%(int(Ppqn)/4) == 0 {
-					go s.PlayTrigger()
+					index := (s.Bar * 4) + s.Beat
+					go s.PlayTrigger(index)
 
 					s.Beat++
 					s.Beat = s.Beat % 4
@@ -80,6 +89,10 @@ func (s *Sequencer) Start() {
 	s.Stream.Start()
 }
 
+// ProcessAudio is the callback function for the portaudio stream
+// Attached the the current Sequencer.
+// Writes all active Track Samples to the output buffer
+// At the playhead for each track.
 func (s *Sequencer) ProcessAudio(out []float32) {
 	for i := range out {
 		var data float32
@@ -99,9 +112,9 @@ func (s *Sequencer) ProcessAudio(out []float32) {
 	}
 }
 
-func (s *Sequencer) PlayTrigger() {
-	index := (s.Bar * 4) + s.Beat
-
+// PlayTrigger triggers a playback for any track that is active for the passed in index.
+// Triggers a playback by resetting the playhead for the matching tracks.
+func (s *Sequencer) PlayTrigger(index int) {
 	for _, track := range s.Pattern.Tracks {
 		if track.StepSequence.Steps[index] == byte(1) {
 			track.Playhead = 0
@@ -109,6 +122,9 @@ func (s *Sequencer) PlayTrigger() {
 	}
 }
 
+// LoadSample loads an audio sample from the passed in filename
+// Into memory and returns the buffer.
+// Returns an error if there was one in audio processing.
 func LoadSample(filename string) ([]float32, error) {
 	var info sndfile.Info
 	soundFile, err := sndfile.Open(filename, sndfile.Read, &info)

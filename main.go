@@ -8,12 +8,28 @@ import (
 	"time"
 )
 
+// Entry point for go-step-sequencer
+// Parses command line flags, which can be either:
+//   - --pattern A filepath for the splice pattern on the filesystem.
+//   - --kit A directory that contains all the samples for the tracks contained in the pattern.
 func main() {
 	var patternPath string
 	var kitPath string
 
-	flag.StringVar(&patternPath, "pattern", "patterns/pattern_1.splice", "-pattern=path/to/pattern.splice")
-	flag.StringVar(&kitPath, "kit", "kits", "-kit=path/to/kits")
+	flag.StringVar(
+		&patternPath,
+		"pattern",
+		"patterns/pattern_1.splice",
+		"-pattern=path/to/pattern.splice",
+	)
+
+	flag.StringVar(
+		&kitPath,
+		"kit",
+		"kits",
+		"-kit=path/to/kits",
+	)
+
 	flag.Parse()
 
 	pattern, err := drum.DecodeFile(patternPath)
@@ -45,6 +61,7 @@ func main() {
 	}
 
 	s.Pattern = pattern
+	s.Timer.Tempo = s.Pattern.Tempo
 
 	s.Start()
 
