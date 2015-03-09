@@ -1,14 +1,7 @@
-package drum
+package sequencer
 
 import (
 	"time"
-)
-
-const (
-	Ppqn        = 24.0
-	Minute      = 60.0
-	Microsecond = 1000000000
-	DefaultBPM  = 120.0
 )
 
 type Timer struct {
@@ -21,7 +14,7 @@ func NewTimer() *Timer {
 	t := &Timer{
 		Pulses: make(chan int),
 		Done:   make(chan bool),
-		BPM:    DefaultBPM,
+		BPM:    float32(DefaultBPM),
 	}
 
 	return t
@@ -47,5 +40,5 @@ func (t *Timer) Start() {
 }
 
 func microsecondsPerPulse(bpm float32) time.Duration {
-	return time.Duration((Minute * Microsecond) / (Ppqn * bpm))
+	return time.Duration((float32(Minute) * float32(Microsecond)) / (float32(Ppqn) * bpm))
 }
