@@ -9,9 +9,19 @@ This project requires two dependent libraries, both of which are thinly wrapped 
   - [portaudio](http://www.portaudio.com/)
   - [libsndfile](http://mega-nerd.com/libsndfile/)
 
+## Build
+
+This project currently has a [Makefile](./Makefile), which not only builds to go binary, but also runs the go linter and the go vet tool.
+
+```bash
+$ make
+```
+
+Upon a successful build, the binary will exist in the root level directory of this project.
+
 ## Usage
 
-First, install the utility using the go tool!
+If you haven't built the tool as indicated above, you should be install the utility using the go tool:
 
 ```bash
 $ go get github.com/kellydunn/go-step-sequencer

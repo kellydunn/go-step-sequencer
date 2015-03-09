@@ -61,7 +61,7 @@ func main() {
 	}
 
 	s.Pattern = pattern
-	s.Timer.Tempo = s.Pattern.Tempo
+	s.Timer.SetTempo(s.Pattern.Tempo)
 
 	s.Start()
 
