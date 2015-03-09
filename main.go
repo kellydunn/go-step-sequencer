@@ -18,7 +18,8 @@ func main() {
 
 	pattern, err := drum.DecodeFile(patternPath)
 	if err != nil {
-		panic(err)
+		fmt.Printf("Error: %v\n", err)
+		return
 	}
 
 	for _, track := range pattern.Tracks {
@@ -26,8 +27,8 @@ func main() {
 
 		track.Buffer, err = sequencer.LoadSample(filepath)
 		if err != nil {
-			fmt.Printf("Error obtaining sample: %v\n", err)
-			panic(err)
+			fmt.Printf("Error: %v\n", err)
+			return
 		}
 
 		track.Playhead = len(track.Buffer)
@@ -39,7 +40,8 @@ func main() {
 
 	s, err := sequencer.NewSequencer()
 	if err != nil {
-		panic(err)
+		fmt.Printf("Error: %v\n", err)
+		return
 	}
 
 	s.Pattern = pattern
@@ -49,4 +51,5 @@ func main() {
 	for {
 		time.Sleep(time.Second)
 	}
+
 }
