@@ -5,12 +5,11 @@ import (
 )
 
 const (
-	PPQN        = 24.0
-	MINUTE      = 60.0
-	MICROSECOND = 1000000000
+	Ppqn        = 24.0
+	Minute      = 60.0
+	Microsecond = 1000000000
+	DefaultBPM  = 120.0
 )
-
-var DEFAULT_BPM float32 = 120.0
 
 type Timer struct {
 	Pulses chan int
@@ -22,7 +21,7 @@ func NewTimer() *Timer {
 	t := &Timer{
 		Pulses: make(chan int),
 		Done:   make(chan bool),
-		BPM:    DEFAULT_BPM,
+		BPM:    DefaultBPM,
 	}
 
 	return t
@@ -48,5 +47,5 @@ func (t *Timer) Start() {
 }
 
 func microsecondsPerPulse(bpm float32) time.Duration {
-	return time.Duration((MINUTE * MICROSECOND) / (PPQN * bpm))
+	return time.Duration((Minute * Microsecond) / (Ppqn * bpm))
 }

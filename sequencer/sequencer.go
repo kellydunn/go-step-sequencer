@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	SAMPLE_RATE     = 44100
-	INPUT_CHANNELS  = 0
-	OUTPUT_CHANNELS = 2
+	SampleRate     = 44100
+	InputChannels  = 0
+	OutputChannels = 2
 )
 
 type Sequencer struct {
@@ -34,9 +34,9 @@ func NewSequencer() (*Sequencer, error) {
 	}
 
 	stream, err := portaudio.OpenDefaultStream(
-		INPUT_CHANNELS,
-		OUTPUT_CHANNELS,
-		SAMPLE_RATE,
+		InputChannels,
+		OutputChannels,
+		SampleRate,
 		portaudio.FramesPerBufferUnspecified,
 		s.ProcessAudio,
 	)
@@ -60,7 +60,7 @@ func (s *Sequencer) Start() {
 				ppqnCount += 1
 
 				// TODO add in time signatures
-				if ppqnCount%(int(PPQN)/4) == 0 {
+				if ppqnCount%(int(Ppqn)/4) == 0 {
 					go s.PlayTrigger()
 
 					s.Beat += 1
@@ -68,13 +68,13 @@ func (s *Sequencer) Start() {
 				}
 
 				// TODO Add in time signatures
-				if ppqnCount%int(PPQN) == 0 {
+				if ppqnCount%int(Ppqn) == 0 {
 					s.Bar += 1
 					s.Bar = s.Bar % 4
 				}
 
 				// 4 bars of quarter notes
-				if ppqnCount == (int(PPQN) * 4) {
+				if ppqnCount == (int(Ppqn) * 4) {
 					ppqnCount = 0
 				}
 

@@ -4,7 +4,7 @@ DEBUG_ARGS= -gcflags "-N -l"
 # List of directories is needed in order to avoid running checks against vendor
 # If your project has multiple packages, consider moving them into a version
 # directory. For example v1/config, v1/handlers, ...
-DIRS := .
+DIRS := sequencer
 
 default: build
 
@@ -23,6 +23,7 @@ get:
 
 test:
 	go test github.com/kellydunn/go-step-sequencer
+	go test $(DIRS:%=github.com/kellydunn/go-step-sequencer/%/...)
 
 bench:
 	go test -run=XXX -bench=. github.com/kellydunn/go-step-sequencer
