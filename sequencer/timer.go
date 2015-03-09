@@ -4,24 +4,28 @@ import (
 	"time"
 )
 
+// Timer is a struct that defines the basic synchronization
+// behavior of the step sequencer
 type Timer struct {
 	Pulses chan int
 	Done   chan bool
-	BPM    float32
+	Tempo  float32
 }
 
+// NewTimer creates and returns a new pointer to a Timer.
 func NewTimer() *Timer {
 	t := &Timer{
 		Pulses: make(chan int),
 		Done:   make(chan bool),
-		BPM:    float32(DefaultBPM),
+		Tempo:  float32(DefaultTempo),
 	}
 
 	return t
 }
 
-func (t *Timer) SetBPM(bpm float32) {
-	t.BPM = bpm
+// Sets the current Timer's tempo
+func (t *Timer) SetTempo(tempo float32) {
+	t.Tempo = tempo
 }
 
 func (t *Timer) Start() {
@@ -31,7 +35,7 @@ func (t *Timer) Start() {
 			case <-t.Done:
 				break
 			default:
-				interval := microsecondsPerPulse(t.BPM)
+				interval := microsecondsPerPulse(t.Tempo)
 				time.Sleep(interval)
 				t.Pulses <- 1
 			}
