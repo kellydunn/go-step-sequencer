@@ -67,4 +67,12 @@ Tempo: 120
 (5) cowbell     |----|----|--x-|----|
 ```
 
-You should be able to hear the drum track out of your speakers now! 
+You should be able to hear the drum track out of your speakers now!
+
+## Notes
+
+The synchronization protocol for the step sequencer borrows heavily from the MIDI Beat Clock protocol, which uses 24 Pulses Per Quarter note for a specified Tempo.  More information on this technique is found [here](http://www.blitter.com/~russtopia/MIDI/~jglatt/tech/midispec/seq.htm).
+
+The sampler uses a "Playhead" seeking strategy for playback similar to wavetable sythesizers.
+
+For playback, the sampler mixes all of the tracks encoded in the pattern and outputs them into a single Portaudio Stream.  
