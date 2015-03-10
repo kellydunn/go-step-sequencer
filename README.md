@@ -11,13 +11,17 @@ This project requires two dependent libraries, both of which are thinly wrapped 
 
 ## Build
 
-This project currently has a [Makefile](./Makefile), which not only builds to go binary, but also runs the go linter and the go vet tool.
+This project is built using a [Makefile](./Makefile), which downloads dependencies, runs the go linter, the go vet tool, and finally, builds the go binary.
 
 ```bash
 $ make
 ```
 
-Upon a successful build, the binary will exist in the root level directory of this project.
+Upon a successful build, the binary will exist in the root level directory of this project.  You should be able to invoke it locally with the following command:
+
+```bash
+$ ./go-step-sequencer
+```
 
 ## Usage
 

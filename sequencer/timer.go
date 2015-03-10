@@ -31,22 +31,20 @@ func (t *Timer) SetTempo(tempo float32) {
 // Start starts the timer.
 // It sends 24 pulses per quarter note for the current tempo.
 func (t *Timer) Start() {
-	go func() {
-		for {
-			select {
-			case <-t.Done:
-				break
-			default:
-				interval := microsecondsPerPulse(t.Tempo)
-				time.Sleep(interval)
-				t.Pulses <- 1
-			}
+	for {
+		select {
+		case <-t.Done:
+			break
+		default:
+			interval := t.MicrosecondsPerPulse()
+			time.Sleep(interval)
+			t.Pulses <- 1
 		}
-	}()
+	}
 }
 
-// Per the MIDI BeatClock specification, this function returns
-// How many microseconds a client would need to wait for a "Pulse" to take place.
-func microsecondsPerPulse(bpm float32) time.Duration {
-	return time.Duration((float32(Minute) * float32(Microsecond)) / (float32(Ppqn) * bpm))
+// MicrosecondsPerPulse returns how many microseconds
+// A client would need to wait for a "Pulse" to take place.
+func (t *Timer) MicrosecondsPerPulse() time.Duration {
+	return time.Duration((float32(Minute) * float32(Microsecond)) / (float32(Ppqn) * t.Tempo))
 }

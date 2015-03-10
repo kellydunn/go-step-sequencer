@@ -11,7 +11,6 @@ import (
 // Triggers and synchronizses a Pattern for audio playback.
 type Sequencer struct {
 	Timer   *Timer
-	Bar     int
 	Beat    int
 	Pattern *drum.Pattern
 	Stream  *portaudio.Stream
@@ -28,7 +27,6 @@ func NewSequencer() (*Sequencer, error) {
 
 	s := &Sequencer{
 		Timer: NewTimer(),
-		Bar:   0,
 		Beat:  0,
 	}
 
@@ -61,31 +59,26 @@ func (s *Sequencer) Start() {
 			case <-s.Timer.Pulses:
 				ppqnCount++
 
+				// Trigger playback after 6 pulses, which is 16th note precision
 				// TODO add in time signatures
 				if ppqnCount%(int(Ppqn)/4) == 0 {
-					index := (s.Bar * 4) + s.Beat
-					go s.PlayTrigger(index)
+					go s.PlayTrigger(s.Beat)
 
 					s.Beat++
-					s.Beat = s.Beat % 4
 				}
 
-				// TODO Add in time signatures
-				if ppqnCount%int(Ppqn) == 0 {
-					s.Bar++
-					s.Bar = s.Bar % 4
-				}
-
-				// 4 bars of quarter notes
+				// Reset the ppqn Count and Beat count after 4 bars of quarter notes
+				// TODO add in different kinds of time signatures
 				if ppqnCount == (int(Ppqn) * 4) {
 					ppqnCount = 0
+					s.Beat = 0
 				}
 
 			}
 		}
 	}()
 
-	s.Timer.Start()
+	go s.Timer.Start()
 	s.Stream.Start()
 }
 
