@@ -1,7 +1,7 @@
 package sequencer
 
 import (
-	portaudio "code.google.com/p/portaudio-go/portaudio"
+	portaudio "github.com/gordonklaus/portaudio"
 	"fmt"
 	drum "github.com/kellydunn/go-challenge-1"
 	"github.com/mkb218/gosndfile/sndfile"
